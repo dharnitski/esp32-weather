@@ -19,17 +19,22 @@ void setup()
 
   // put your setup code here, to run once:
   tft.init();
-  tft.setRotation(0);
-  tft.fillScreen(TFT_GREEN);
-  delay(1000);
+  tft.setRotation(1);
+  tft.fillScreen(TFT_BLACK);
+
+  // Set "cursor" at top left corner of display (0,0) and select font 2
+  // (cursor will move to next line automatically during printing with 'tft.println'
+  //  or stay on the line is there is room for the text with tft.print)
+  tft.setCursor(0, 0, 2);
+  // Set the font colour to be white with a black background, set text size multiplier to 1
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.setFreeFont(1);
+  tft.setTextSize(3);
+  // We can now plot text on screen using the "print" class
+  tft.println("Hello World!");
 }
 
 void loop()
 {
 
-  tft.fillScreen(TFT_BLUE);
-  delay(1000);
-  tft.fillScreen(TFT_RED);
-  delay(1000);
-  // put your main code here, to run repeatedly:
 }
