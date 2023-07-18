@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>
+#include <SPI.h>
 #include <WiFi.h>
 
 TFT_eSPI tft = TFT_eSPI();
@@ -39,15 +40,6 @@ void setup()
 {
   Serial.begin(115200);
   Serial.print(F("Hello! Feather TFT Test"));
-
-  // turn on backlite
-  pinMode(TFT_BACKLITE, OUTPUT);
-  digitalWrite(TFT_BACKLITE, HIGH);
-
-  // turn on the TFT / I2C power supply
-  pinMode(TFT_I2C_POWER, OUTPUT);
-  digitalWrite(TFT_I2C_POWER, HIGH);
-  delay(100);
 
   // put your setup code here, to run once:
   tft.init();
