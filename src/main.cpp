@@ -5,7 +5,7 @@
 
 TFT_eSPI tft = TFT_eSPI();
 
-void scnWiFi()
+void scanWiFi()
 {
   Serial.println("scan start");
 
@@ -49,20 +49,21 @@ void setup()
   // Set "cursor" at top left corner of display (0,0) and select font 2
   // (cursor will move to next line automatically during printing with 'tft.println'
   //  or stay on the line is there is room for the text with tft.print)
-  tft.setCursor(0, 0, 2);
+  // tft.setCursor(0, 0, 2);
   // Set the font colour to be white with a black background, set text size multiplier to 1
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.setFreeFont(1);
-  tft.setTextSize(3);
-  // We can now plot text on screen using the "print" class
-  tft.println("Hello World!");
+  // tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  // tft.setFreeFont(1);
+  // tft.setTextSize(3);
+  // // We can now plot text on screen using the "print" class
+  // tft.println("Hello World!");
+  tft.drawString("Hello World!", 10, 10, 2);
 
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
 
-  scnWiFi();
+  scanWiFi();
 }
 
 void loop()
