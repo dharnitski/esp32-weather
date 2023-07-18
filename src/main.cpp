@@ -4,12 +4,19 @@
 #include <ArduinoHttpClient.h>
 #include <ArduinoJson.h>
 
+#include "cloudy.h"
+#include "haze.h"
+#include "rain.h"
+#include "snowy.h"
 #include "sunny.h"
+#include "thunder.h"
+
 #include "secrets.h"
 
 TFT_eSPI tft = TFT_eSPI();
+TFT_eSprite textSprite = TFT_eSprite(&tft);
 
-const char *location = "Atlanta,US";
+const char *location = "Milton,US";
 const char *units = "metric";
 int port = 80;
 
@@ -63,6 +70,42 @@ void initWiFi()
   Serial.println(WiFi.localIP());
 }
 
+// TODO: support all codes
+// https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
+void setBackground(char const *weather)
+{
+  if (strcmp(weather, "Haze") == 0)
+  {
+    tft.pushImage(0, 0, 240, 135, haze);
+  }
+  else if (strcmp(weather, "Clouds") == 0)
+  {
+    tft.pushImage(0, 0, 240, 135, cloudy);
+  }
+  else if (strcmp(weather, "Rain") == 0)
+  {
+    tft.pushImage(0, 0, 240, 135, rain);
+  }
+  else if (strcmp(weather, "Snow") == 0)
+  {
+    tft.pushImage(0, 0, 240, 135, snowy);
+  }
+  else if (strcmp(weather, "Clear") == 0)
+  {
+    tft.pushImage(0, 0, 240, 135, sunny);
+  }
+  else if (strcmp(weather, "Thunder") == 0)
+  {
+    tft.pushImage(0, 0, 240, 135, thunder);
+  }
+
+  /* more else if clauses */
+  else /* default: */
+  {
+    tft.pushImage(0, 0, 240, 135, haze);
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -74,7 +117,7 @@ void setup()
   tft.setSwapBytes(true);
   tft.fillScreen(TFT_BLACK);
 
-  tft.pushImage(0, 0, 240, 135, sunny);
+  tft.pushImage(0, 0, 240, 135, haze);
 
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
@@ -134,17 +177,24 @@ void getWeather()
 
   const char *name = doc["name"]; // "Atlanta"
 
+  setBackground(weather_condition);
+
+  textSprite.createSprite(240, 135);
+  textSprite.setSwapBytes(true);
+
   char location[128];
   snprintf(location, sizeof(location), "%s, %s", name, sys_country);
-  tft.drawString(location, 10, 10, 4);
+  textSprite.drawString(location, 10, 10, 4);
 
   char current_temp[16];
   snprintf(current_temp, sizeof(current_temp), "%.1fC", main_temp);
-  tft.drawString(current_temp, 70, 50, 4);
+  textSprite.drawString(current_temp, 75, 55, 4);
 
   char range_temp[32];
-  snprintf(range_temp, sizeof(range_temp), "H:%.1fC     L:%.1fC", main_temp_max, main_temp_min);
-  tft.drawString(range_temp, 10, 90, 4);
+  snprintf(range_temp, sizeof(range_temp), "H:%.1fC       L:%.1fC", main_temp_max, main_temp_min);
+  textSprite.drawString(range_temp, 10, 100, 4);
+
+  textSprite.pushSprite(0, 0, TFT_BLACK);
 }
 
 void loop()
